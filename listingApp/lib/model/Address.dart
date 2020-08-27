@@ -4,7 +4,7 @@ class Address {
   String street;
   String suite;
   String city;
-  int zipcode;
+  String zipcode;
   Geo geo;
 
   Address({this.street, this.suite, this.city, this.zipcode, this.geo});
@@ -13,7 +13,7 @@ class Address {
         street: parsedJson["street"],
         suite: parsedJson["suite"],
         city: parsedJson["city"],
-        zipcode: int.parse(parsedJson["zipcode"]),
+        zipcode: parsedJson["zipcode"],
         geo: Geo.fromJson(parsedJson["geo"]));
   }
 }
