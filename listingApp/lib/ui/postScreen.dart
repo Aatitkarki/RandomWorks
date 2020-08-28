@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:listingApp/model/Users.dart';
+import 'package:listingApp/model/Post.dart';
 import 'package:listingApp/services/Api.dart';
-import 'package:listingApp/ui/postScreen.dart';
 import 'package:listingApp/ui/userPostScreen.dart';
 
-class HomePage extends StatefulWidget {
+class PostScreen extends StatefulWidget {
+  final int userId;
+
+  PostScreen({this.userId});
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  List<User> userList;
+class _HomePageState extends State<PostScreen> {
+  List<Post> postsList;
   bool isLoading = true;
   ApiServices apiServices = ApiServices();
 
   getData() async {
-    userList = await apiServices.getUserData();
-    print(userList.length);
+    postsList = await apiServices.getPostsData(widget.userId);
+    print(postsList.length);
     setState(() {
       print("changing state");
       isLoading = false;
@@ -32,21 +34,22 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Users"),
+        title: Text("Latest PostScreen"),
         centerTitle: true,
       ),
       body: Container(
         child: Center(
-          child: userList == null
+          child: postsList == null
               ? CircularProgressIndicator()
               : ListView.builder(
-                  itemCount: userList.length,
+                  itemCount: postsList.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => PostScreen(
-                                  userId: userList[index].id,
+                            builder: (context) => UserPosts(
+                                  postId: postsList[index].id,
+                                  userPost: postsList[index],
                                 )));
                       },
                       child: Card(
@@ -54,14 +57,15 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "${userList[index].name}",
+                              "${postsList[index].title}",
                               style: TextStyle(fontSize: 25),
                             ),
                             SizedBox(
                               height: 20,
                             ),
                             Text(
-                              "${userList[index].address.city}",
+                              "${postsList[index].body}",
+                              maxLines: 2,
                               style: TextStyle(fontSize: 18),
                             ),
                           ],
