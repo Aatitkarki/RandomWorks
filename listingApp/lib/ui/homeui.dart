@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:listingApp/model/Users.dart';
 import 'package:listingApp/services/Api.dart';
 import 'package:listingApp/ui/postScreen.dart';
-import 'package:listingApp/ui/userPostScreen.dart';
+// import 'package:listingApp/ui/userPostScreen.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -44,10 +44,13 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
                             builder: (context) => PostScreen(
-                                  userId: userList[index].id,
-                                )));
+                              userId: userList[index].id,
+                            ),
+                          ),
+                        );
                       },
                       child: Card(
                         child: Column(

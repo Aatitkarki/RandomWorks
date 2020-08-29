@@ -1,32 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:listingApp/model/Comment.dart';
 import 'package:listingApp/model/Post.dart';
 import 'package:listingApp/services/Api.dart';
+import 'package:listingApp/model/Comment.dart';
+import 'package:listingApp/services/OfflineService.dart';
+import 'package:listingApp/Prefs%20keys/keys.dart';
 
-class UserPosts extends StatefulWidget {
+class UserPostScreen extends StatefulWidget {
   final Post userPost;
   final int postId;
 
-  UserPosts({this.userPost, this.postId});
+  UserPostScreen({this.userPost, this.postId});
+
   @override
-  _UserPostsState createState() => _UserPostsState();
+  _UserPostScreenState createState() => _UserPostScreenState();
 }
 
-class _UserPostsState extends State<UserPosts> {
+class _UserPostScreenState extends State<UserPostScreen> {
   List<Comment> commentList;
-  bool isLoading = true;
+  bool isloading = true;
   ApiServices apiServices = ApiServices();
 
   getData() async {
-    print("before changing state");
-    commentList = await apiServices.getCommentsData(widget.postId);
+    commentList = await apiServices.getCommentdata(widget.postId);
 
     setState(() {
-      print("changing state");
-      isLoading = false;
+      isloading = false;
+      // print("this is the after the await");
+      // print(commentList.length);
     });
-    print("this is the after the await");
-    print(commentList.length);
   }
 
   @override
@@ -35,60 +36,83 @@ class _UserPostsState extends State<UserPosts> {
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.userPost.title),
+        title: Text("Comment Section"),
         centerTitle: true,
       ),
       body: Container(
-        child: Center(
-          child: commentList == null
-              ? CircularProgressIndicator()
-              : Column(
-                  children: [
-                    Card(
+        child: commentList == null
+            ? CircularProgressIndicator()
+            : Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.fromLTRB(30.0, 15.0, 20.0, 15.0),
+                    height: 180.0,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.blue[200],
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(5, 5),
+                            blurRadius: 1.0,
+                            spreadRadius: 1.0)
+                      ],
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+                        children: <Widget>[
                           Text(
                             widget.userPost.body,
-                            style: TextStyle(fontSize: 25),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            "Comments",
-                            maxLines: 2,
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 20),
                           ),
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: ListView.builder(
-                          itemCount: commentList.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    commentList[index].email,
-                                    style: TextStyle(fontSize: 25),
-                                  ),
-                                  Text(
-                                    commentList[index].body,
-                                    style: TextStyle(fontSize: 18),
-                                  )
-                                ],
-                              ),
-                            );
-                          }),
-                    )
-                  ],
-                ),
-        ),
+                  ),
+                  Center(
+                    child: Text(
+                      "Comments",
+                      maxLines: 2,
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: commentList.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "By ${commentList[index].email}",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text(
+                                  "${commentList[index].body}",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }
