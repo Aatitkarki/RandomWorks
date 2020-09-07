@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:listingApp/model/Post.dart';
 import 'package:listingApp/services/Api.dart';
 import 'package:listingApp/model/Comment.dart';
-import 'package:listingApp/services/OfflineService.dart';
-import 'package:listingApp/Prefs%20keys/keys.dart';
+// import 'package:listingApp/services/OfflineService.dart';
+// import 'package:listingApp/Prefs%20keys/keys.dart';
 
 class UserPostScreen extends StatefulWidget {
   final Post userPost;
@@ -16,7 +16,7 @@ class UserPostScreen extends StatefulWidget {
 }
 
 class _UserPostScreenState extends State<UserPostScreen> {
-  List<Comment> commentList;
+  List<Comment> commentList = [];
   bool isloading = true;
   ApiServices apiServices = ApiServices();
 
